@@ -5,12 +5,12 @@ export const site = {
     "Consultant IT",
     "Java Spring Boot & DevOps & Kafka Enthusiast",
   ],
-  headline: "I build clean, performant web products.",
+  headline: "I build reliable Java backend systems.",
   summary:
-    "I’m a software engineer focused on thoughtful UX, reliable systems, and pragmatic engineering. I enjoy building with TypeScript, React, and modern backend tooling.",
+    "Backend Engineer in Java, Spring Boot, and Spring AI, with a strong interest in Kafka & cloud technologies, Kubernetes, and OpenShift.",
   links: {
-    github: "https://github.com/your-handle",
-    linkedin: "https://www.linkedin.com/in/your-handle/",
-    email: "mailto:you@example.com",
+    github: "https://github.com/AbidarYassine/",
+    linkedin: "https://www.linkedin.com/in/yassine-abidar/",
+    email: "mailto:yassinabidar201@gmail.com",
   },
 } as const;
