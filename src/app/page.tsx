@@ -17,10 +17,11 @@ export default function HomePage() {
         <Container className="py-12 sm:py-16">
           <div className="space-y-6">
             <h1 className="flex min-w-0 flex-col items-start gap-3 text-4xl font-semibold tracking-tight sm:flex-row sm:items-center sm:gap-x-3 sm:gap-y-2 md:text-5xl">
+              <span className="min-w-0 wrap-break-word">{site.name}</span>
               <span className="inline-flex max-w-full items-center rounded-full border border-border bg-card px-3 py-1 text-xs font-medium leading-tight text-muted-foreground sm:text-sm">
                 <RotatingText items={site.roles} />
               </span>
-              <span className="min-w-0 break-words">{site.name}</span>
+
             </h1>
             <p className="max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
               {site.headline}

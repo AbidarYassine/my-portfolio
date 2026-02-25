@@ -1,26 +1,66 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useReducer, useRef, useState } from "react";
 
-const ANIM_MS = 420;
+const TYPING_SPEED = 80; // ms per char when typing
+const DELETING_SPEED = 40; // ms per char when deleting
+const HOLD_MS = 1200; // ms to hold full word before deleting
+
+type AnimationState = "typing" | "holding" | "deleting";
+
+interface State {
+  currentIndex: number;
+  display: string;
+  animState: AnimationState;
+}
+
+type Action =
+  | { type: "ADVANCE_DISPLAY"; nextDisplay: string }
+  | { type: "TRANSITION_STATE"; nextState: AnimationState }
+  | { type: "NEXT_ITEM"; itemCount: number };
+
+function animationReducer(state: State, action: Action): State {
+  switch (action.type) {
+    case "ADVANCE_DISPLAY":
+      return { ...state, display: action.nextDisplay };
+    case "TRANSITION_STATE":
+      return { ...state, animState: action.nextState };
+    case "NEXT_ITEM":
+      return {
+        ...state,
+        currentIndex: (state.currentIndex + 1) % action.itemCount,
+        animState: "typing",
+      };
+    default:
+      return state;
+  }
+}
 
 export function RotatingText({
   items,
-  intervalMs = 2600,
   className,
 }: {
   items: readonly string[];
-  intervalMs?: number;
   className?: string;
 }) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [nextIndex, setNextIndex] = useState<number | null>(null);
+  const initialDisplay = items[0] ?? "";
+  const [state, dispatch] = useReducer(animationReducer, {
+    currentIndex: 0,
+    display: initialDisplay,
+    animState: "typing",
+  });
 
-  const currentRef = useRef(0);
+  // Track if component has mounted on client to avoid hydration mismatches
+  const [isMounted, setIsMounted] = useState(false);
 
+  const prefersReducedMotion = useRef(false);
   useEffect(() => {
-    currentRef.current = currentIndex;
-  }, [currentIndex]);
+    setIsMounted(true);
+    if (typeof globalThis !== "undefined" && typeof globalThis.matchMedia === "function") {
+      prefersReducedMotion.current =
+        globalThis.matchMedia("(prefers-reduced-motion: reduce)")?.matches ?? false;
+    }
+  }, []);
 
   const widest = useMemo(() => {
     let best = "";
@@ -28,40 +68,60 @@ export function RotatingText({
     return best;
   }, [items]);
 
-  useEffect(() => {
-    if (items.length <= 1) return;
+  const currentText = items[state.currentIndex] ?? "";
 
-    // Respect reduced motion.
-    if (
-      typeof window !== "undefined" &&
-      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
-    ) {
-      return;
+  // Animation state machine
+  useEffect(() => {
+    if (items.length === 0 || prefersReducedMotion.current || !isMounted) return;
+
+    let timeoutId: ReturnType<typeof globalThis.setTimeout> | undefined;
+
+    if (state.animState === "typing") {
+      if (state.display.length < currentText.length) {
+        // Still typing - add next character
+        timeoutId = globalThis.setTimeout(() => {
+          dispatch({
+            type: "ADVANCE_DISPLAY",
+            nextDisplay: currentText.slice(0, state.display.length + 1),
+          });
+        }, TYPING_SPEED);
+      } else {
+        // Finished typing - transition to holding
+        timeoutId = globalThis.setTimeout(() => {
+          dispatch({ type: "TRANSITION_STATE", nextState: "holding" });
+        }, HOLD_MS);
+      }
+    } else if (state.animState === "holding") {
+      // Transition from holding to deleting
+      timeoutId = globalThis.setTimeout(() => {
+        dispatch({ type: "TRANSITION_STATE", nextState: "deleting" });
+      }, 0);
+    } else if (state.animState === "deleting") {
+      if (state.display.length > 0) {
+        // Still deleting - remove last character
+        timeoutId = globalThis.setTimeout(() => {
+          dispatch({
+            type: "ADVANCE_DISPLAY",
+            nextDisplay: currentText.slice(0, state.display.length - 1),
+          });
+        }, DELETING_SPEED);
+      } else {
+        // Finished deleting - move to next item
+        dispatch({ type: "NEXT_ITEM", itemCount: items.length });
+      }
     }
 
-    const id = window.setInterval(() => {
-      setNextIndex((existing) => {
-        if (existing !== null) return existing;
-        return (currentRef.current + 1) % items.length;
-      });
-    }, intervalMs);
+    return () => {
+      if (timeoutId !== undefined) globalThis.clearTimeout(timeoutId);
+    };
+  }, [state.animState, state.display.length, currentText, items.length, isMounted]);
 
-    return () => window.clearInterval(id);
-  }, [intervalMs, items.length]);
-
+  // Sync display when items change
   useEffect(() => {
-    if (nextIndex === null) return;
-
-    const t = window.setTimeout(() => {
-      setCurrentIndex(nextIndex);
-      setNextIndex(null);
-    }, ANIM_MS);
-
-    return () => window.clearTimeout(t);
-  }, [nextIndex]);
-
-  const current = items[currentIndex] ?? "";
-  const next = nextIndex === null ? null : (items[nextIndex] ?? "");
+    if (state.currentIndex >= items.length && items.length > 0) {
+      dispatch({ type: "NEXT_ITEM", itemCount: items.length });
+    }
+  }, [items.length, state.currentIndex]);
 
   return (
     <span
@@ -70,17 +130,30 @@ export function RotatingText({
         (className ?? "")
       }
     >
-      {/* Layout stabilizer (prevents width jumps). */}
+      {/* Layout stabilizer (prevents width jumps) */}
       <span aria-hidden className="invisible block max-w-full whitespace-normal break-words">
         {widest}
       </span>
 
       <span className="absolute inset-0 block max-w-full whitespace-normal break-words">
-        <span className={next ? "block animate-rise-out" : "block"}>{current}</span>
-
-        {next ? (
-          <span className="absolute inset-0 block animate-rise-in">{next}</span>
-        ) : null}
+        <span className="block">
+          {state.display}
+          {/* Only render cursor after hydration to avoid mismatch */}
+          {isMounted && (
+            <span
+              aria-hidden
+              className="animate-blink ml-1 align-baseline inline-block"
+              style={{
+                width: 1,
+                height: "1em",
+                backgroundColor: "currentColor",
+                marginLeft: 6,
+                verticalAlign: "middle",
+                opacity: 0.9,
+              }}
+            />
+          )}
+        </span>
       </span>
     </span>
   );
