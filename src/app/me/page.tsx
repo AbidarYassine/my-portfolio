@@ -17,16 +17,17 @@ export default function MePage() {
         <section className="space-y-3">
           <h2 className="text-xl font-semibold tracking-tight">Focus</h2>
           <ul className="list-disc space-y-2 pl-5 text-muted-foreground">
-            <li>Building fast, accessible web apps with TypeScript + React.</li>
-            <li>Shipping reliable systems with clear boundaries and good observability.</li>
-            <li>Polished UI: clean typography, subtle motion, strong information hierarchy.</li>
+            <li>Designing clean, scalable backend architectures with Java and Spring Boot.</li>
+            <li>Building reliable, event-driven systems with Kafka and strong observability.</li>
+            <li>Integrating AI capabilities using Spring AI.</li>
+            <li>Deploying cloud-native solutions with Docker, Kubernetes, and OpenShift.</li>
           </ul>
         </section>
 
         <section className="space-y-3">
           <h2 className="text-xl font-semibold tracking-tight">Tech I use</h2>
           <div className="flex flex-wrap gap-2">
-            {["TypeScript", "React", "Next.js", "Node.js", "Postgres", "Docker", "CI/CD"].map(
+            {site.tech.map(
               (t) => (
                 <span
                   key={t}

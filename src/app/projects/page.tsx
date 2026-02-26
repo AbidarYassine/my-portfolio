@@ -10,7 +10,7 @@ export default function ProjectsPage() {
         <div className="space-y-2">
           <h1 className="text-3xl font-semibold tracking-tight">Projects</h1>
           <p className="max-w-2xl text-muted-foreground">
-            A few things I’ve built. Replace these with your real work (repos, demos, case studies).
+            A few things I’ve built.
           </p>
         </div>
 
