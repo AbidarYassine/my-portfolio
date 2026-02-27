@@ -1,9 +1,12 @@
 import Link from "next/link";
 
+import { AuroraBg } from "@/components/aurora-bg";
 import { Container } from "@/components/container";
+import { MagneticButton } from "@/components/magnetic-button";
+import { MouseParallax } from "@/components/mouse-parallax";
 import { RotatingText } from "@/components/rotating-text";
 import { ScrollFade } from "@/components/scroll-fade";
-import { Starfield } from "@/components/starfield";
+import { TextReveal } from "@/components/text-reveal";
 import { getAllPosts } from "@/lib/blog";
 import { formatDate } from "@/lib/format";
 import { projects } from "@/lib/projects";
@@ -16,51 +19,68 @@ export default function HomePage() {
   return (
     <>
       <section className="relative overflow-hidden">
-        <Starfield />
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(0,0,0,0.03)_0%,transparent_50%)] dark:bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.03)_0%,transparent_50%)]" />
-        <Container className="relative flex min-h-[60vh] items-center justify-center py-24 sm:py-32">
-          <div className="space-y-6 text-center">
-            <h1
-              className="animate-fade-in-up flex min-w-0 flex-col items-center gap-4 text-4xl font-semibold tracking-tight md:text-5xl lg:text-6xl"
-              style={{ "--delay": "0ms" } as React.CSSProperties}
-            >
-              <span className="animate-glow min-w-0 wrap-break-word">{site.name}</span>
-              <span className="inline-flex max-w-full items-center rounded-full border border-border bg-card px-4 py-2 text-sm font-medium leading-tight text-muted-foreground sm:text-base">
-                <RotatingText items={site.roles} />
-              </span>
-            </h1>
+        <AuroraBg />
+        <Container className="relative flex min-h-[50vh] sm:min-h-[60vh] items-center justify-center py-16 sm:py-24 md:py-32">
+          <MouseParallax>
+            <div className="space-y-4 sm:space-y-6 text-center">
+              <h1 className="flex min-w-0 flex-col items-center gap-2 sm:gap-4 text-3xl sm:text-4xl font-semibold tracking-tight md:text-5xl lg:text-6xl">
+                <TextReveal text={site.name} className="min-w-0" charDelay={50} />
+                <span
+                  className="inline-flex max-w-full items-center rounded-full border border-border bg-card px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium leading-tight text-muted-foreground md:text-base"
+                  style={{
+                    opacity: 0,
+                    animation: "fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+                    animationDelay: "800ms",
+                  }}
+                >
+                  <RotatingText items={site.roles} />
+                </span>
+              </h1>
 
-            <p
-              className="animate-fade-in-up mx-auto max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8"
-              style={{ "--delay": "100ms" } as React.CSSProperties}
-            >
-              {site.headline}
-            </p>
+              <p
+                className="mx-auto max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8"
+                style={{
+                  opacity: 0,
+                  animation: "fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+                  animationDelay: "1000ms",
+                }}
+              >
+                {site.headline}
+              </p>
 
-            <div
-              className="animate-fade-in-up flex flex-col items-center justify-center gap-3 sm:flex-row"
-              style={{ "--delay": "200ms" } as React.CSSProperties}
-            >
-              <Link
-                href="/projects"
-                className="inline-flex h-11 items-center justify-center rounded-lg bg-accent px-6 text-sm font-medium text-accent-foreground shadow-sm transition hover:opacity-90"
+              <div
+                className="flex flex-col items-center justify-center gap-3 sm:flex-row"
+                style={{
+                  opacity: 0,
+                  animation: "fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+                  animationDelay: "1200ms",
+                }}
               >
-                View projects
-              </Link>
-              <Link
-                href="/me"
-                className="inline-flex h-11 items-center justify-center rounded-lg border border-border bg-card px-6 text-sm font-medium text-foreground transition hover:bg-muted"
-              >
-                About me
-              </Link>
+                <MagneticButton>
+                  <Link
+                    href="/projects"
+                    className="inline-flex h-11 items-center justify-center rounded-lg bg-accent px-6 text-sm font-medium text-accent-foreground shadow-sm transition hover:opacity-90"
+                  >
+                    View projects
+                  </Link>
+                </MagneticButton>
+                <MagneticButton>
+                  <Link
+                    href="/me"
+                    className="inline-flex h-11 items-center justify-center rounded-lg border border-border bg-card px-6 text-sm font-medium text-foreground transition hover:bg-muted"
+                  >
+                    About me
+                  </Link>
+                </MagneticButton>
+              </div>
             </div>
-          </div>
+          </MouseParallax>
         </Container>
       </section>
 
       <section>
         <Container className="py-12 sm:py-16">
-          <div className="grid gap-12 md:grid-cols-2">
+          <div className="grid gap-8 sm:gap-10 md:gap-12 md:grid-cols-2">
             <ScrollFade>
               <div className="space-y-5">
                 <div className="flex items-end justify-between">
@@ -166,6 +186,51 @@ export default function HomePage() {
               </div>
             </ScrollFade>
           </div>
+        </Container>
+      </section>
+
+      <section className="border-t border-border">
+        <Container className="py-16 sm:py-20">
+          <ScrollFade>
+            <div className="mx-auto max-w-xl space-y-6 text-center">
+              <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+                Get in touch
+              </h2>
+              <p className="text-muted-foreground">
+                Have a project in mind or just want to say hello? Feel free to reach out.
+              </p>
+              <div className="flex flex-wrap items-center justify-center gap-4">
+                <a
+                  href={site.links.email}
+                  className="inline-flex h-11 items-center gap-2 rounded-lg bg-accent px-6 text-sm font-medium text-accent-foreground shadow-sm transition hover:opacity-90"
+                >
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                  Send an email
+                </a>
+                <a
+                  href={site.links.github}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex h-11 items-center gap-2 rounded-lg border border-border bg-card px-6 text-sm font-medium text-foreground transition hover:bg-muted"
+                >
+                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" /></svg>
+                  GitHub
+                </a>
+                <a
+                  href={site.links.linkedin}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex h-11 items-center gap-2 rounded-lg border border-border bg-card px-6 text-sm font-medium text-foreground transition hover:bg-muted"
+                >
+                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" /></svg>
+                  LinkedIn
+                </a>
+              </div>
+              <p className="pt-4 text-xs text-muted-foreground/60">
+                &copy; 2026 ABIDAR Yassine. All rights reserved.
+              </p>
+            </div>
+          </ScrollFade>
         </Container>
       </section>
     </>

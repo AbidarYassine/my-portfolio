@@ -9,7 +9,7 @@ import { site } from "@/lib/site";
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
-      <Container className="flex h-16 min-w-0 items-center justify-between gap-3">
+      <Container className="flex h-14 sm:h-16 min-w-0 items-center justify-between gap-3">
         <div className="flex items-center gap-4">
           <Link href="/" className="font-semibold tracking-tight">
             {site.name}

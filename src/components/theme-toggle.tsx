@@ -53,14 +53,14 @@ export function ThemeToggle() {
   // Render a placeholder with identical dimensions until mounted to avoid hydration mismatch
   if (!mounted) {
     return (
-      <div className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-card" />
+      <div className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-border bg-card" />
     );
   }
 
   return (
     <button
       type="button"
-      className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-card text-foreground transition hover:bg-muted"
+      className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-border bg-card text-foreground transition hover:bg-muted"
       onClick={() => setTheme(next)}
       aria-label={`Switch to ${next} theme`}
     >

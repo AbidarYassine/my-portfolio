@@ -36,7 +36,7 @@ export function MobileNav() {
     <div className="relative md:hidden">
       <button
         type="button"
-        className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-card text-foreground transition hover:bg-muted"
+        className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-border bg-card text-foreground transition hover:bg-muted"
         aria-label="Open menu"
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
@@ -45,7 +45,7 @@ export function MobileNav() {
       </button>
 
       {open ? (
-        <div className="absolute right-0 mt-2 w-48 rounded-xl border border-border bg-card p-2 shadow-sm">
+        <div className="fixed inset-x-0 top-14 z-50 border-b border-border bg-background/95 backdrop-blur-md px-4 pb-4 pt-2">
           {links.map((l) => {
             const active =
               pathname === l.href || (l.href !== "/" && pathname?.startsWith(l.href));
@@ -56,7 +56,7 @@ export function MobileNav() {
                 href={l.href}
                 onClick={() => setOpen(false)}
                 className={
-                  "block rounded-lg px-3 py-2 text-sm transition hover:bg-muted " +
+                  "block rounded-lg px-4 py-3 text-base font-medium transition hover:bg-muted " +
                   (active ? "bg-muted text-foreground" : "text-muted-foreground")
                 }
               >

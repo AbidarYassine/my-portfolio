@@ -29,7 +29,7 @@ export default function BlogIndexPage() {
               href={`/blog/${p.slug}`}
               className="group block rounded-xl border border-border bg-card p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:shadow-black/5 dark:hover:shadow-black/20"
             >
-              <div className="flex items-start justify-between gap-4">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
                 <div className="space-y-1">
                   <h2 className="text-lg font-semibold tracking-tight">{p.title}</h2>
                   {p.description ? (
