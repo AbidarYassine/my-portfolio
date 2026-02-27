@@ -4,7 +4,7 @@ import { AuroraBg } from "@/components/aurora-bg";
 import { Container } from "@/components/container";
 import { MagneticButton } from "@/components/magnetic-button";
 import { MouseParallax } from "@/components/mouse-parallax";
-import { RotatingText } from "@/components/rotating-text";
+import { GradientText } from "@/components/gradient-text";
 import { ScrollFade } from "@/components/scroll-fade";
 import { TextReveal } from "@/components/text-reveal";
 import { getAllPosts } from "@/lib/blog";
@@ -20,25 +20,26 @@ export default function HomePage() {
     <>
       <section className="relative overflow-hidden">
         <AuroraBg />
-        <Container className="relative flex min-h-[50vh] sm:min-h-[60vh] items-center justify-center py-16 sm:py-24 md:py-32">
+        <Container className="relative flex min-h-[60vh] sm:min-h-[70vh] items-center justify-center py-20 sm:py-28 md:py-36">
           <MouseParallax>
-            <div className="space-y-4 sm:space-y-6 text-center">
-              <h1 className="flex min-w-0 flex-col items-center gap-2 sm:gap-4 text-3xl sm:text-4xl font-semibold tracking-tight md:text-5xl lg:text-6xl">
-                <TextReveal text={site.name} className="min-w-0" charDelay={50} />
-                <span
-                  className="inline-flex max-w-full items-center rounded-full border border-border bg-card px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium leading-tight text-muted-foreground md:text-base"
-                  style={{
-                    opacity: 0,
-                    animation: "fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards",
-                    animationDelay: "800ms",
-                  }}
-                >
-                  <RotatingText items={site.roles} />
-                </span>
+            <div className="space-y-6 sm:space-y-8 text-center">
+              {/* Name heading */}
+              <h1 className="flex min-w-0 flex-col items-center gap-3 sm:gap-4">
+                <TextReveal
+                  text={site.name}
+                  className="min-w-0 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-medium tracking-tight bg-gradient-to-r from-foreground via-foreground to-muted-foreground bg-clip-text"
+                  charDelay={50}
+                />
+                <GradientText
+                  text="Consultant IT  ·  Java & Spring Boot  ·  DevOps"
+                  className="text-lg sm:text-xl md:text-2xl font-medium tracking-tight"
+                  delay={800}
+                />
               </h1>
 
+              {/* Headline */}
               <p
-                className="mx-auto max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8"
+                className="mx-auto max-w-2xl text-lg leading-7 text-muted-foreground sm:text-xl sm:leading-8"
                 style={{
                   opacity: 0,
                   animation: "fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards",
@@ -48,30 +49,80 @@ export default function HomePage() {
                 {site.headline}
               </p>
 
+              {/* Tech stack pills */}
               <div
-                className="flex flex-col items-center justify-center gap-3 sm:flex-row"
+                className="flex flex-wrap items-center justify-center gap-2"
                 style={{
                   opacity: 0,
                   animation: "fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards",
-                  animationDelay: "1200ms",
+                  animationDelay: "1100ms",
+                }}
+              >
+                {site.tech.map((t, i) => (
+                  <span
+                    key={t}
+                    className="rounded-full border border-border/60 bg-card/60 px-3 py-1 text-xs text-muted-foreground backdrop-blur-sm transition-colors hover:border-border hover:text-foreground"
+                    style={{
+                      opacity: 0,
+                      animation: "float-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+                      animationDelay: `${1200 + i * 80}ms`,
+                    }}
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+
+              {/* CTA buttons */}
+              <div
+                className="flex flex-col items-center justify-center gap-3 pt-2 sm:flex-row"
+                style={{
+                  opacity: 0,
+                  animation: "fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+                  animationDelay: "1600ms",
                 }}
               >
                 <MagneticButton>
                   <Link
                     href="/projects"
-                    className="inline-flex h-11 items-center justify-center rounded-lg bg-accent px-6 text-sm font-medium text-accent-foreground shadow-sm transition hover:opacity-90"
+                    className="group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-xl bg-accent px-8 text-sm font-semibold text-accent-foreground shadow-lg shadow-accent/20 transition-all hover:shadow-xl hover:shadow-accent/30 hover:scale-[1.02]"
                   >
+                    <span
+                      className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                      style={{
+                        backgroundSize: "200% 100%",
+                        animation: "shimmer 3s ease-in-out infinite",
+                      }}
+                    />
                     View projects
+                    <svg className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
                   </Link>
                 </MagneticButton>
                 <MagneticButton>
                   <Link
                     href="/me"
-                    className="inline-flex h-11 items-center justify-center rounded-lg border border-border bg-card px-6 text-sm font-medium text-foreground transition hover:bg-muted"
+                    className="inline-flex h-12 items-center justify-center rounded-xl border border-border bg-card/80 px-8 text-sm font-semibold text-foreground backdrop-blur-sm transition-all hover:bg-muted hover:scale-[1.02]"
                   >
                     About me
                   </Link>
                 </MagneticButton>
+              </div>
+
+              {/* Scroll indicator */}
+              <div
+                className="pt-8"
+                style={{
+                  opacity: 0,
+                  animation: "fade-in 1s ease forwards",
+                  animationDelay: "2200ms",
+                }}
+              >
+                <div
+                  className="mx-auto flex h-8 w-5 items-start justify-center rounded-full border border-muted-foreground/30 p-1"
+                  style={{ animation: "bounce-scroll 2s ease-in-out infinite" }}
+                >
+                  <div className="h-1.5 w-1 rounded-full bg-muted-foreground/50" />
+                </div>
               </div>
             </div>
           </MouseParallax>

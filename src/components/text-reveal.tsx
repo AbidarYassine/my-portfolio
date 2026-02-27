@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 interface TextRevealProps {
   text: string;
@@ -17,11 +17,11 @@ export function TextReveal({
   charDelay = 40,
   startDelay = 0,
 }: TextRevealProps) {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
   return (
     <span className={className} aria-label={text}>

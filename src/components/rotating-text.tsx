@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useReducer, useRef, useState } from "react";
+import { useEffect, useMemo, useReducer, useRef, useSyncExternalStore } from "react";
 
 const TYPING_SPEED = 80; // ms per char when typing
 const DELETING_SPEED = 40; // ms per char when deleting
@@ -51,11 +51,14 @@ export function RotatingText({
   });
 
   // Track if component has mounted on client to avoid hydration mismatches
-  const [isMounted, setIsMounted] = useState(false);
+  const isMounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
   const prefersReducedMotion = useRef(false);
   useEffect(() => {
-    setIsMounted(true);
     if (typeof globalThis !== "undefined" && typeof globalThis.matchMedia === "function") {
       prefersReducedMotion.current =
         globalThis.matchMedia("(prefers-reduced-motion: reduce)")?.matches ?? false;

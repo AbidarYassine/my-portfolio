@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface MouseParallaxProps {
   children: React.ReactNode;
@@ -16,31 +16,6 @@ export function MouseParallax({
 }: MouseParallaxProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [style, setStyle] = useState({ rotateX: 0, rotateY: 0 });
-  const rafRef = useRef<number | undefined>(undefined);
-  const targetRef = useRef({ rotateX: 0, rotateY: 0 });
-  const currentRef = useRef({ rotateX: 0, rotateY: 0 });
-
-  const animate = useCallback(() => {
-    const cur = currentRef.current;
-    const tgt = targetRef.current;
-    const lerp = 0.08;
-
-    cur.rotateX += (tgt.rotateX - cur.rotateX) * lerp;
-    cur.rotateY += (tgt.rotateY - cur.rotateY) * lerp;
-
-    if (
-      Math.abs(tgt.rotateX - cur.rotateX) > 0.01 ||
-      Math.abs(tgt.rotateY - cur.rotateY) > 0.01
-    ) {
-      setStyle({ rotateX: cur.rotateX, rotateY: cur.rotateY });
-      rafRef.current = requestAnimationFrame(animate);
-    } else {
-      cur.rotateX = tgt.rotateX;
-      cur.rotateY = tgt.rotateY;
-      setStyle({ rotateX: cur.rotateX, rotateY: cur.rotateY });
-    }
-  }, []);
-
   useEffect(() => {
     // Skip on touch-only devices or reduced motion
     if (
@@ -51,6 +26,30 @@ export function MouseParallax({
     const el = containerRef.current;
     if (!el) return;
 
+    let rafId: number | undefined;
+    const target = { rotateX: 0, rotateY: 0 };
+    const current = { rotateX: 0, rotateY: 0 };
+
+    function animate() {
+      const lerp = 0.08;
+
+      current.rotateX += (target.rotateX - current.rotateX) * lerp;
+      current.rotateY += (target.rotateY - current.rotateY) * lerp;
+
+      if (
+        Math.abs(target.rotateX - current.rotateX) > 0.01 ||
+        Math.abs(target.rotateY - current.rotateY) > 0.01
+      ) {
+        setStyle({ rotateX: current.rotateX, rotateY: current.rotateY });
+        rafId = requestAnimationFrame(animate);
+      } else {
+        current.rotateX = target.rotateX;
+        current.rotateY = target.rotateY;
+        setStyle({ rotateX: current.rotateX, rotateY: current.rotateY });
+        rafId = undefined;
+      }
+    }
+
     function handleMouseMove(e: MouseEvent) {
       const rect = el!.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
@@ -59,20 +58,19 @@ export function MouseParallax({
       const x = (e.clientX - centerX) / (rect.width / 2); // -1 to 1
       const y = (e.clientY - centerY) / (rect.height / 2); // -1 to 1
 
-      targetRef.current = {
-        rotateX: -y * intensity,
-        rotateY: x * intensity,
-      };
+      target.rotateX = -y * intensity;
+      target.rotateY = x * intensity;
 
-      if (!rafRef.current) {
-        rafRef.current = requestAnimationFrame(animate);
+      if (rafId === undefined) {
+        rafId = requestAnimationFrame(animate);
       }
     }
 
     function handleMouseLeave() {
-      targetRef.current = { rotateX: 0, rotateY: 0 };
-      if (!rafRef.current) {
-        rafRef.current = requestAnimationFrame(animate);
+      target.rotateX = 0;
+      target.rotateY = 0;
+      if (rafId === undefined) {
+        rafId = requestAnimationFrame(animate);
       }
     }
 
@@ -82,14 +80,9 @@ export function MouseParallax({
     return () => {
       el.removeEventListener("mousemove", handleMouseMove);
       el.removeEventListener("mouseleave", handleMouseLeave);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      if (rafId !== undefined) cancelAnimationFrame(rafId);
     };
-  }, [animate, intensity]);
-
-  // Clear raf ref after each frame so next mousemove can restart
-  useEffect(() => {
-    rafRef.current = undefined;
-  });
+  }, [intensity]);
 
   return (
     <div
