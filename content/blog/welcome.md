@@ -1,15 +1,22 @@
 ---
 title: "Welcome"
-description: "Why I built this site and how it’s structured."
+description: "Java and Spring Boot blog focused on backend architecture, distributed systems."
 date: "2026-02-25"
 ---
 
-This is a simple markdown-powered blog.
+# Welcome 👋
 
-- Posts live in `content/blog`.
-- The blog index is generated from frontmatter.
-- Each post is rendered on the server.
+Hi, I’m ABIDAR Yassine — a Software Engineer specialized in the Java ecosystem and distributed systems.
 
-## Next
+I built this site to document what I learn, what I build, and what I discover along the way. Writing helps me clarify my thinking, and sharing it keeps me growing.
 
-Replace this post with your own writing.
+## What you can expect
+
+Most articles here focus on:
+
+- Java & Spring Boot
+- Clean architecture and system design
+- AI integrations in backend systems
+- Cloud-native and containerized environments
+
+I prefer writing practical content — less theory, more real-world examples from actual projects.

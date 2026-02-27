@@ -1,13 +1,22 @@
 ---
-title: "Engineering notes"
-description: "A quick note on building clean systems."
-date: "2026-02-20"
+title: "Welcome"
+description: "Java and Spring Boot blog focused on backend architecture, distributed systems."
+date: "2026-02-25"
 ---
 
-A system is easy to change when it has:
+# Welcome 👋
 
-1. Clear interfaces
-2. Small modules
-3. Good observability
+Hi, I’m ABIDAR Yassine — a Software Engineer specialized in the Java ecosystem and distributed systems.
 
-Write for the next engineer (which is usually you, a month later).
+I built this site to document what I learn, what I build, and what I discover along the way. Writing helps me clarify my thinking, and sharing it keeps me growing.
+
+## What you can expect
+
+Most articles here focus on:
+
+- Java & Spring Boot
+- Clean architecture and system design
+- AI integrations in backend systems
+- Cloud-native and containerized environments
+
+I prefer writing practical content — less theory, more real-world examples from actual projects.

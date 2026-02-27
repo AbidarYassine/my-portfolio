@@ -51,7 +51,7 @@ export default async function BlogPostPage({
         </header>
 
         <div
-          className="prose prose-zinc max-w-none dark:prose-invert prose-headings:tracking-tight prose-a:text-foreground"
+          className="prose prose-zinc max-w-none dark:prose-invert"
           // Content is local markdown from your repo.
           dangerouslySetInnerHTML={{ __html: post.html }}
         />

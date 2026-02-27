@@ -27,7 +27,7 @@ export default function BlogIndexPage() {
             <Link
               key={p.slug}
               href={`/blog/${p.slug}`}
-              className="block rounded-xl border border-border bg-card p-5 transition hover:bg-muted"
+              className="group block rounded-xl border border-border bg-card p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:shadow-black/5 dark:hover:shadow-black/20"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-1">
@@ -36,11 +36,14 @@ export default function BlogIndexPage() {
                     <p className="text-sm text-muted-foreground">{p.description}</p>
                   ) : null}
                 </div>
-                {p.date ? (
-                  <span className="shrink-0 text-xs text-muted-foreground">
-                    {formatDate(p.date)}
-                  </span>
-                ) : null}
+                <div className="flex shrink-0 items-center gap-2">
+                  {p.date ? (
+                    <span className="text-xs text-muted-foreground">
+                      {formatDate(p.date)}
+                    </span>
+                  ) : null}
+                  <span className="text-muted-foreground transition-transform group-hover:translate-x-0.5">&rarr;</span>
+                </div>
               </div>
             </Link>
           ))}

@@ -1,26 +1,28 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   --background: #ffffff;
-  --foreground: #0a0a0a;
+  --foreground: #111111;
   --card: #ffffff;
-  --muted: #f4f4f5;
-  --muted-foreground: #52525b;
-  --border: rgba(0, 0, 0, 0.1);
-  --accent: #0a0a0a;
+  --muted: #f5f5f6;
+  --muted-foreground: #64748b;
+  --border: rgba(0, 0, 0, 0.08);
+  --accent: #111111;
   --accent-foreground: #ffffff;
 }
 
 /* next-themes toggles `.dark` on the <html> element. */
 .dark {
-  --background: #0b0d10;
-  --foreground: #f4f4f5;
-  --card: #0f1117;
-  --muted: #151822;
-  --muted-foreground: #a1a1aa;
-  --border: rgba(255, 255, 255, 0.14);
-  --accent: #f4f4f5;
-  --accent-foreground: #0b0d10;
+  --background: #0a0c10;
+  --foreground: #f0f0f2;
+  --card: #0e1117;
+  --muted: #141820;
+  --muted-foreground: #94a3b8;
+  --border: rgba(255, 255, 255, 0.1);
+  --accent: #f0f0f2;
+  --accent-foreground: #0a0c10;
 }
 
 @theme inline {
@@ -83,6 +85,56 @@ html.dark {
   }
 }
 
+@keyframes glow {
+  0%,
+  100% {
+    text-shadow: 0 0 6px rgba(0, 0, 0, 0.12), 0 0 20px rgba(0, 0, 0, 0.06);
+  }
+  50% {
+    text-shadow: 0 0 16px rgba(0, 0, 0, 0.2), 0 0 40px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.dark .animate-glow {
+  animation: glow-dark 3s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glow 3s ease-in-out infinite;
+}
+
+@keyframes glow-dark {
+  0%,
+  100% {
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.2),
+      0 0 20px rgba(255, 255, 255, 0.1);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.35),
+      0 0 50px rgba(255, 255, 255, 0.15);
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .animate-blink {
   animation: blink 1s steps(2, start) infinite;
 }
@@ -95,9 +147,22 @@ html.dark {
   animation: rise-out 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--delay, 0ms);
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease both;
+  animation-delay: var(--delay, 0ms);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-rise-in,
-  .animate-rise-out {
+  .animate-rise-out,
+  .animate-fade-in-up,
+  .animate-fade-in,
+  .animate-glow {
     animation: none;
   }
   /* stop cursor blinking when reduced motion is requested */
@@ -108,4 +173,66 @@ html.dark {
 
 body {
   font-family: var(--font-sans);
+}
+
+/* Prose styling — unlayered so these rules win over the typography plugin */
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  letter-spacing: -0.025em;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.prose a {
+  color: var(--foreground);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.prose a:hover {
+  opacity: 0.75;
+}
+
+.prose code {
+  background-color: var(--muted);
+  border-radius: 0.25rem;
+  padding: 0.125rem 0.375rem;
+  font-size: 0.875rem;
+  color: var(--foreground);
+}
+
+.prose pre {
+  background-color: var(--muted);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+}
+
+.prose pre code {
+  background-color: transparent;
+  padding: 0;
+  color: var(--foreground);
+}
+
+.prose blockquote {
+  border-left: 2px solid var(--border);
+  padding-left: 1rem;
+  font-style: italic;
+  color: var(--muted-foreground);
+}
+
+.prose hr {
+  border-color: var(--border);
+}
+
+/* In light mode, prose-zinc sets --tw-prose-pre-code to zinc.100 (nearly white).
+   Override it here so code-block text is readable on our light bg-muted background. */
+html:not(.dark) .prose {
+  --tw-prose-pre-code: var(--foreground);
+  --tw-prose-pre-bg: var(--muted);
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 
 function SunIcon() {
@@ -42,9 +43,19 @@ function MoonIcon() {
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
 
   const current = resolvedTheme ?? "dark";
   const next = current === "dark" ? "light" : "dark";
+
+  // Render a placeholder with identical dimensions until mounted to avoid hydration mismatch
+  if (!mounted) {
+    return (
+      <div className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-card" />
+    );
+  }
 
   return (
     <button
