@@ -1,4 +1,5 @@
 import { Container } from "@/components/container";
+import { ResumeDownload } from "@/components/resume-download";
 import { site } from "@/lib/site";
 
 export default function MePage() {
@@ -13,6 +14,8 @@ export default function MePage() {
         </div>
 
         <p className="max-w-2xl text-base leading-7 text-muted-foreground">{site.summary}</p>
+
+        <ResumeDownload />
 
         <section className="space-y-4">
           <h2 className="text-xl font-semibold tracking-tight">Focus</h2>
